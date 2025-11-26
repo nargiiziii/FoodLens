@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, ActivityIndicator, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
+import { MaterialIcons } from '@expo/vector-icons';
 import colors from '../constants/colors';
 import geminiService from '../services/geminiService';
+
+const { width } = Dimensions.get('window');
 
 const ScanScreen = ({ navigation }) => {
   const [image, setImage] = useState(null);
@@ -25,10 +28,7 @@ const ScanScreen = ({ navigation }) => {
       quality: 0.8,
       base64: true
     });
-
-    if (!result.canceled) {
-      setImage(result.assets[0]);
-    }
+    if (!result.canceled) setImage(result.assets[0]);
   };
 
   const takePhoto = async () => {
@@ -43,10 +43,19 @@ const ScanScreen = ({ navigation }) => {
       quality: 0.8,
       base64: true
     });
+    if (!result.canceled) setImage(result.assets[0]);
+  };
 
-    if (!result.canceled) {
-      setImage(result.assets[0]);
-    }
+  const handlePressImageArea = () => {
+    Alert.alert(
+      "Select Image",
+      "Choose an option",
+      [
+        { text: "Camera", onPress: takePhoto },
+        { text: "Gallery", onPress: pickImage },
+        { text: "Cancel", style: "cancel" }
+      ]
+    );
   };
 
   const analyzeImage = async () => {
@@ -59,88 +68,61 @@ const ScanScreen = ({ navigation }) => {
     navigation.navigate('Analysis', { image: image.uri });
 
     try {
-      // Пытаемся использовать API, но если не работает - вернутся фейковые данные
       const result = await geminiService.analyzeFood(image.base64);
-      
       setLoading(false);
-      navigation.replace('Score', { 
-        analysisData: result,
-        image: image.uri 
-      });
+      navigation.replace('Score', { analysisData: result, image: image.uri });
     } catch (error) {
-      // Этот catch теперь не должен срабатывать, так как geminiService сам вернет фейковые данные
       console.error('Unexpected error:', error);
       setLoading(false);
-      
-      // На всякий случай - если совсем все плохо
       const fallbackData = geminiService.getFakeData();
       fallbackData.then(data => {
-        navigation.replace('Score', { 
-          analysisData: data,
-          image: image.uri 
-        });
+        navigation.replace('Score', { analysisData: data, image: image.uri });
       });
     }
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.backButton}>← Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>Scan Product</Text>
-      </View>
 
-      <View style={styles.imageContainer}>
-        {image ? (
-          <Image source={{ uri: image.uri }} style={styles.image} />
-        ) : (
-          <View style={styles.placeholder}>
-            <Text style={styles.placeholderIcon}>📷</Text>
-            <Text style={styles.placeholderText}>No image selected</Text>
-            <Text style={styles.placeholderSubtext}>
-              Demo mode: Will show sample results
-            </Text>
-          </View>
-        )}
-      </View>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity 
-          style={[styles.button, styles.cameraButton]}
-          onPress={takePhoto}
-        >
-          <Text style={styles.buttonText}>📷 Take Photo</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity 
-          style={[styles.button, styles.galleryButton]}
-          onPress={pickImage}
-        >
-          <Text style={styles.buttonText}>🖼️ Choose from Gallery</Text>
+      {/* Верхняя зелёная зона */}
+      <View style={styles.topArea}>
+        <TouchableOpacity style={styles.imageArea} onPress={handlePressImageArea}>
+          {image ? (
+            <Image source={{ uri: image.uri }} style={styles.image} />
+          ) : (
+            <Text style={styles.imagePlaceholder}>Tap to select or scan photo</Text>
+          )}
         </TouchableOpacity>
 
         {image && (
-          <TouchableOpacity 
-            style={[styles.button, styles.analyzeButton]}
-            onPress={analyzeImage}
-            disabled={loading}
-          >
+          <TouchableOpacity style={styles.analyzeButton} onPress={analyzeImage} disabled={loading}>
             {loading ? (
               <ActivityIndicator color={colors.white} />
             ) : (
-              <Text style={styles.buttonText}>🔍 Analyze Product</Text>
+              <Text style={styles.analyzeButtonText}>Analyze</Text>
             )}
           </TouchableOpacity>
         )}
       </View>
 
-      <View style={styles.demoNote}>
-        <Text style={styles.demoNoteText}>
-          💡 Demo Mode: If API is not configured, sample data will be displayed
-        </Text>
+      {/* Нижняя белая панель */}
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Home')}>
+          <MaterialIcons name="home" size={34} color={colors.primary} />
+          <Text style={styles.navLabel}>Home</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Analysis')}>
+          <MaterialIcons name="psychology" size={34} color={colors.primary} />
+          <Text style={styles.navLabel}>AI Explain</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('History')}>
+          <MaterialIcons name="history" size={34} color={colors.primary} />
+          <Text style={styles.navLabel}>History</Text>
+        </TouchableOpacity>
       </View>
+
     </View>
   );
 };
@@ -148,96 +130,75 @@ const ScanScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background
+    backgroundColor: 'green',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 20,
-    paddingTop: 60,
-    backgroundColor: colors.white
-  },
-  backButton: {
-    fontSize: 16,
-    color: colors.primary,
-    marginRight: 20
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: colors.text
-  },
-  imageContainer: {
-    flex: 1,
-    margin: 20,
-    borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: colors.white
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain'
-  },
-  placeholder: {
+
+  topArea: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20
   },
-  placeholderIcon: {
-    fontSize: 64,
-    marginBottom: 16
-  },
-  placeholderText: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    marginBottom: 8
-  },
-  placeholderSubtext: {
-    fontSize: 12,
-    color: colors.textSecondary,
-    textAlign: 'center',
-    fontStyle: 'italic'
-  },
-  buttonContainer: {
-    padding: 20
-  },
-  button: {
-    paddingVertical: 16,
-    borderRadius: 12,
+
+  imageArea: {
+    width: width * 0.85,
+    height: width * 1.2,   // ← УДЛИНИЛ
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: colors.primary,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12
+    backgroundColor: colors.white,
+    marginBottom: 20,
   },
-  cameraButton: {
-    backgroundColor: colors.secondary
+
+  image: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 20,
+    resizeMode: 'cover'
   },
-  galleryButton: {
-    backgroundColor: colors.textSecondary
+
+  imagePlaceholder: {
+    color: colors.textSecondary,
+    fontSize: 16,
+    textAlign: 'center',
   },
+
   analyzeButton: {
     backgroundColor: colors.primary,
-    marginTop: 8
+    paddingVertical: 14,
+    paddingHorizontal: 50,
+    borderRadius: 30,
+    marginTop: 20,
   },
-  buttonText: {
+
+  analyzeButtonText: {
     color: colors.white,
+    fontWeight: 'bold',
     fontSize: 16,
-    fontWeight: 'bold'
   },
-  demoNote: {
-    backgroundColor: '#FFF3CD',
-    padding: 12,
-    marginHorizontal: 20,
-    marginBottom: 20,
-    borderRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: '#FFC107'
+
+  bottomNav: {
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    paddingVertical: 35,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    elevation: 8,
   },
-  demoNoteText: {
-    fontSize: 12,
-    color: '#856404',
-    textAlign: 'center'
-  }
+
+  navButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  navLabel: {
+    marginTop: 4,
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.text,
+  },
 });
 
 export default ScanScreen;
