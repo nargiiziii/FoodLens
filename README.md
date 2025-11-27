@@ -1,33 +1,71 @@
-FoodLens – Mobile Food Scanner App (React Native + Expo)
 
-FoodLens is a modern mobile application built with React Native and Expo, designed to help users analyze food products and better understand what they consume. The interface is minimalistic and visually clean, providing an intuitive experience for users.
+---
 
-Key Features
+# FoodLens – React Native Food Scanner App
 
-Modern onboarding screen with a green–white theme
+**FoodLens** is a mobile application built with **React Native** and **Expo** that helps users analyze food products and better understand what they consume. The app features a clean interface with a modern green–white theme, a visually appealing hero section, and smooth navigation to the scanning screen.
 
-Interactive “Explore” button that navigates to the scanning page
+---
 
-Visually appealing hero section with a rounded image and app logo
+## Features
 
-Smooth UI layout using layered backgrounds and rounded containers
+* Clean and modern user interface
+* Hero section with app logo and rounded product illustration
+* “Explore” button navigating to the **ScanScreen**
+* Smooth and responsive layout for both **iOS** and **Android**
+* Organized project structure with reusable components
 
-Navigation implemented through React Navigation
+---
 
-Responsive design prepared for both iOS and Android
+## Tech Stack
 
-Tech Stack
+* **React Native**
+* **Expo**
+* **React Navigation**
+* **JavaScript**
+* **StyleSheet for custom UI styling**
 
-React Native
+---
 
-Expo
+## Purpose
 
-React Navigation
+The goal of FoodLens is to provide users with a simple and intuitive tool to understand food additives, E-codes, and ingredients found in everyday products, enabling healthier and more informed decisions.
 
-JavaScript
+---
 
-Custom UI styling with StyleSheet
+## Installation
 
-Purpose
+1. Clone the repository:
 
-The objective of FoodLens is to help users understand food additives, E-codes, and ingredients found in everyday food products, enabling them to make informed and healthier decisions.
+```bash
+git clone <your-repo-url>
+```
+
+2. Navigate to the project directory:
+
+```bash
+cd FoodLens
+```
+
+3. Install dependencies:
+
+```bash
+npm install
+```
+
+4. Start the Expo project:
+
+```bash
+npx expo start
+```
+
+---
+
+## Usage
+
+* Launch the app on your device or simulator
+* Press the **Explore** button to navigate to the scanning screen
+* View product information and ingredient analysis
+
+---
+
