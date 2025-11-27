@@ -1,50 +1,33 @@
-# Welcome to your Expo app 👋
+FoodLens – Mobile Food Scanner App (React Native + Expo)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+FoodLens is a modern mobile application built with React Native and Expo, designed to help users analyze food products and better understand what they consume. The interface is minimalistic and visually clean, providing an intuitive experience for users.
 
-## Get started
+Key Features
 
-1. Install dependencies
+Modern onboarding screen with a green–white theme
 
-   ```bash
-   npm install
-   ```
+Interactive “Explore” button that navigates to the scanning page
 
-2. Start the app
+Visually appealing hero section with a rounded image and app logo
 
-   ```bash
-   npx expo start
-   ```
+Smooth UI layout using layered backgrounds and rounded containers
 
-In the output, you'll find options to open the app in a
+Navigation implemented through React Navigation
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Responsive design prepared for both iOS and Android
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Tech Stack
 
-## Get a fresh project
+React Native
 
-When you're ready, run:
+Expo
 
-```bash
-npm run reset-project
-```
+React Navigation
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+JavaScript
 
-## Learn more
+Custom UI styling with StyleSheet
 
-To learn more about developing your project with Expo, look at the following resources:
+Purpose
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+The objective of FoodLens is to help users understand food additives, E-codes, and ingredients found in everyday food products, enabling them to make informed and healthier decisions.
